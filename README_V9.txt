@@ -1,81 +1,57 @@
-HANDCAPTION V9 — PROPER BUILD
+HandCaption V10
+================
 
-This V9 is rebuilt from the working V8 page structure rather than replacing the whole application with a different layout.
+V10 is based on the working V9.2 multi-stroke handwriting build.
 
-V9 HANDWRITING
-- One character at a time: A-Z, a-z, 0-9.
-- Large Android-friendly writing board.
-- Faint/translucent guide character.
-- Guide is never stored in the glyph image.
-- Redraw current character.
-- Back / Next navigation.
-- 1/62 progress.
-- Character checklist for direct correction.
-- Save is enabled only after all 62 characters are written.
-- Existing complete packs from older localStorage versions are migrated.
+Main additions
+---------------
+1. Handwriting creator
+- 62 characters: A-Z, a-z, 0-9
+- Multiple strokes per character
+- Undo/redo for the current character
+- Redraw, Back, Next, checklist navigation
+- Saved packs remain local
 
-V9 EDITOR
-- Add/delete uploaded media.
-- Current media can be removed and another file added.
-- Multiple caption layers.
-- Caption color.
-- Caption rotation.
-- Caption size.
-- Caption animations: none, fade, slide, pop, write-on.
-- Animation duration.
-- Drag captions on photos.
-- Local photo PNG export.
-- Local video preview and WebM export where Android browser APIs support it.
+2. Pack backup
+- Export a handwriting pack as JSON
+- Import a previously exported pack
+- Existing V5-V9 packs are migrated when all 62 glyphs are valid
 
-SECURITY
-- Local-only media processing.
-- File MIME allowlist.
-- Image 15 MB limit.
-- Video 100 MB limit.
-- Caption and pack-name limits.
-- Safe DOM rendering for pack names.
-- CSP meta policy.
-- No external JavaScript dependencies.
-- Temporary object URL cleanup.
-- localStorage is not encrypted.
-- GitHub Pages cannot provide arbitrary custom server response headers, so the meta CSP is not equivalent to a server-delivered CSP.
-- Do not claim 100% security.
+3. Caption editor
+- Multiple caption layers (up to 15)
+- Add/update, duplicate, delete
+- Drag captions on photos
+- Size, color, rotation, spacing, shadow, opacity
+- Fade, slide, pop and write-on animations
+- Undo/redo editor history
+- Video start/end timing per caption
 
-DEPLOY
-Replace only:
+4. Photo export
+- Local PNG export
+- No media upload
+
+5. Video export
+- Local WebM export when MediaRecorder + canvas capture are supported
+- Video audio track is preserved when the browser exposes it
+- MP4 export is not guaranteed by Android browsers
+
+Security/privacy notes
+----------------------
+- No login and no external JS libraries
+- LocalStorage is used for handwriting packs
+- Object URLs are revoked when media is removed/page is left
+- File types and sizes are checked before opening
+- CSP meta policy is included
+- GitHub Pages hosting is static; a meta CSP is not the same as an HTTP response header
+- LocalStorage is not encrypted
+
+Files
+-----
 index.html
 style.css
 app.js
+README_V10.txt
 
-Keep your working V8 backup.
-
-TEST
-1. Create a new pack.
-2. Write A, then B, then navigate back to A and rewrite it.
-3. Complete all 62.
-4. Save.
-5. Refresh and confirm pack remains.
-6. Upload a photo.
-7. Add, rotate, recolor and animate a caption.
-8. Delete the file and add another.
-9. Upload a short video and test preview/export.
-
-
-V9.1 FIX
-The Android code editor was displaying TypeScript ts(7044) and ts(6133)
-diagnostics for ordinary JavaScript callback parameters/unused helper functions.
-These are editor diagnostics, not browser runtime errors.
-
-V9.1 adds `// @ts-nocheck` to app.js so JavaScript is not incorrectly blocked by
-the editor's TypeScript checker. Browser execution is unchanged.
-
-Node syntax check: PASS
-
-
-V9.2 WRITING FIX
-- A character is no longer considered finished when the finger is lifted.
-- Multiple strokes are allowed on the same character.
-- Lifting and touching again keeps all previous strokes.
-- The character is captured/saved only when the user presses Next.
-- Pointer capture is released safely after each stroke.
-- Android touch-action is explicitly disabled on the writing canvas to reduce scrolling/gesture interruptions.
+Deployment
+----------
+Replace the existing index.html, style.css and app.js in the GitHub Pages repository with these V10 files. Keep the repository root structure so index.html is at the top level of the Pages publishing source.
